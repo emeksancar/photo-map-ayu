@@ -36,7 +36,6 @@ export default function Camera() {
       await Location.requestForegroundPermissionsAsync();
 
     if (locationPermission.granted) {
-      console.log("Location permission granted");
       setLocationPermission(true);
     } else if (!locationPermission.canAskAgain && !locationPermission.granted) {
       setLocationPermission(false);

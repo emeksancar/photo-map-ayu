@@ -34,13 +34,12 @@ export default function App() {
 
   const fetchMarkers = async () => {
     const markers = await getPhotos();
-    console.log(markers, 'markers, here');
     setMarkers(markers);
     return markers;
   };
 
   const deletePhoto = async (fileUri: string) => {
-    removePhoto(fileUri);
+    await removePhoto(fileUri);
     setModalVisible(false);
     fetchMarkers();
   };
@@ -49,7 +48,6 @@ export default function App() {
     useCallback(() => {
       fetchMarkers();
       return () => {
-        console.log("This route is now unfocused.");
         mapRef.current.animateToRegion({ "latitude": "41.0938977", "latitudeDelta": 0.05, "longitude": "29.0040908", "longitudeDelta": 0.05 }, 1000)
       };
     }, []),
@@ -76,8 +74,6 @@ export default function App() {
 
       if (mapRef.current) {
         setTimeout(() => {
-          console.log('wtf man')
-          console.log(locationCollection, 'locationCollection');
           mapRef.current.animateToRegion(locationCollection, 1000);
         }, 3000)
       }
@@ -114,25 +110,20 @@ export default function App() {
             <View>
               <Image
                 source={{ uri: activeMarkerData.photoFileLocation }}
-                style={{ width: "100%", aspectRatio: 1, borderRadius: 10 }}
+                style={styles.modalImage}
               />
               <Text
-                style={{
-                  color: "white",
-                  fontWeight: "bold",
-                  fontSize: 25,
-                  position: "absolute",
-                  bottom: 10,
-                  left: 25,
-                  textShadowColor: "rgba(0, 0, 0, 0.75)",
-                  textShadowOffset: { width: -1, height: 1 },
-                  textShadowRadius: 10,
-                }}
+                style={styles.photoNote}
               >
                 {activeMarkerData?.photoNote}
               </Text>
+              <Text
+                style={styles.photoDate}
+              >
+                {new Date(activeMarkerData?.photoDate).toLocaleDateString('tr-TR')}
+              </Text>
               <TouchableOpacity
-                style={{ position: "absolute", top: 15, right: 25 }}
+                style={styles.deleteContainer}
                 onPress={() => deletePhoto(activeMarkerData.photoFileLocation)}
               >
                 <AntDesign name="delete" size={24} color="red" />
